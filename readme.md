@@ -20,10 +20,10 @@ Commands
 Example
 =======
 
-forward 3
-left 2
-forward 5
-right 2
+    forward 3
+    left 2
+    forward 5
+    right 2
 
 The stage area is 50 steps x 50 steps, and a full circle is 16 rotation steps (so 4 rotation steps = 90 degrees).
 
