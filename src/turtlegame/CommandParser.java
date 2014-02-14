@@ -27,7 +27,7 @@ public class CommandParser {
             }
         });
     }
-
+    // TODO support f5 rather than f 5.  Don't redo last working cmomand if user types rubbish then return.
     public void reparse() {
         List<Command> commands = new ArrayList<Command>();
         String[] lines = textArea.getText().split("\n");
@@ -41,15 +41,15 @@ public class CommandParser {
                     String amount = parts[1].trim();
                     int amountValue = Integer.parseInt(amount);
 
-                    if( commandName.equalsIgnoreCase("forward") || commandName.equalsIgnoreCase("forwards") ) {
+                    if( commandName.equalsIgnoreCase("forward") || commandName.equalsIgnoreCase("forwards") || commandName.equalsIgnoreCase("f") ) {
                         Command command = new Forward(amountValue);
                         commands.add(command);
                     } else
-                    if( commandName.equalsIgnoreCase("left") ) {
+                    if( commandName.equalsIgnoreCase("left") || commandName.equalsIgnoreCase("l") ) {
                         Command command = new Turn(amountValue);
                         commands.add(command);
                     } else
-                    if( commandName.equalsIgnoreCase("right") ) {
+                    if( commandName.equalsIgnoreCase("right") || commandName.equalsIgnoreCase("r")) {
                         Command command = new Turn(-amountValue);
                         commands.add(command);
                     } else {

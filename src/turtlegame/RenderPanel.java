@@ -22,8 +22,8 @@ public class RenderPanel extends JPanel {
 
     private Screen screen;
 
-    private Color DOTS = new Color(0,45,0);
-    private Color TRAIL = DOTS;
+    private Color DOTS = new Color(10,120,10);
+    private Color TRAIL = new Color(10,80,10);
 
     private boolean dotsActive = true;
     private boolean linesActive = true;
