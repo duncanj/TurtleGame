@@ -7,7 +7,8 @@ Fledgling beginnings of a turtle-like (as in LOGO, not mutant ninja) game for ch
 Screenshots
 ===========
 
-![TurtleGame-1](TurtleGame-1.png)
+![Game: None](TurtleGame-1.png)
+![Game: One Barrier](TurtleGame-2.png)
 
 
 Commands
