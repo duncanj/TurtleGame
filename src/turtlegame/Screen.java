@@ -345,6 +345,39 @@ public class Screen implements CommandListener {
             }
         });
 
+        JMenu trailMenu = new JMenu("Trail");
+        frame.getJMenuBar().add(trailMenu);
+        addMenuItem(trailMenu, "Dots + Lines", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getRenderPanel().setTrail(true, true, false);
+            }
+        });
+        addMenuItem(trailMenu, "Dots", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getRenderPanel().setTrail(true, false, false);
+            }
+        });
+        addMenuItem(trailMenu, "Big Dots", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getRenderPanel().setTrail(true, false, true);
+            }
+        });
+        addMenuItem(trailMenu, "Lines", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getRenderPanel().setTrail(false, true, false);
+            }
+        });
+        addMenuItem(trailMenu, "No Trail", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getRenderPanel().setTrail(false, false, false);
+            }
+        });
+
 
         frame.getJMenuBar().add(Box.createHorizontalGlue());
 

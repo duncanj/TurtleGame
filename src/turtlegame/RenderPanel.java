@@ -25,6 +25,10 @@ public class RenderPanel extends JPanel {
     private Color DOTS = new Color(0,45,0);
     private Color TRAIL = DOTS;
 
+    private boolean dotsActive = true;
+    private boolean linesActive = true;
+    private boolean largeDots = false;
+
     private Stroke defaultStroke = new BasicStroke(1.0f);
     private Stroke wideStroke = new BasicStroke(10.0f);
 
@@ -63,17 +67,26 @@ public class RenderPanel extends JPanel {
         Point penultimatePoint = lastPoint;
 
         for( Command command : commands ) {
-            g.setColor(DOTS);
-            g.fillOval(-3,-3,6,6);
+            if( dotsActive ) {
+                if( largeDots ) {
+                    g.setColor(Color.GRAY);
+                    g.fillOval(-4,-4,8,8);
+                } else {
+                    g.setColor(DOTS);
+                    g.fillOval(-3,-3,6,6);
+                }
+            }
 
             command.apply(ctx);
 
             Point thisPoint = ctx.getComponentCoordinates();
 
-            g.setColor(TRAIL);
-            ctx.pushTransform(initialTransform);
-            g.drawLine(lastPoint.x, lastPoint.y, thisPoint.x, thisPoint.y);
-            ctx.popTransform();
+            if( linesActive ) {
+                g.setColor(TRAIL);
+                ctx.pushTransform(initialTransform);
+                g.drawLine(lastPoint.x, lastPoint.y, thisPoint.x, thisPoint.y);
+                ctx.popTransform();
+            }
 
             penultimatePoint = lastPoint;
             lastPoint = thisPoint;
@@ -145,6 +158,13 @@ public class RenderPanel extends JPanel {
 
     public void clear() {
         commands.clear();
+        repaint();
+    }
+
+    public void setTrail(boolean dotsActive, boolean linesActive, boolean largeDots) {
+        this.dotsActive = dotsActive;
+        this.linesActive = linesActive;
+        this.largeDots = largeDots;
         repaint();
     }
 
