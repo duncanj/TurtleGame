@@ -9,6 +9,7 @@ Screenshots
 
 ![Game: None](TurtleGame-1.png)
 ![Game: One Barrier](TurtleGame-2.png)
+![Game: Three Barriers](TurtleGame-3.png)
 
 
 Commands
@@ -31,9 +32,10 @@ The stage area is 100 steps x 100 steps, and a full circle is 16 rotation steps 
 
 Games
 =====
+* None - practice moving the turtle around.
 * Simple - get the turtle into the yellow gate.
 * One Barrier - get the turtle into the yellow gate without touching the red barrier.
-
+* Three Barriers - weave the turtle in and out of the barriers to get to the gate.
 
 Why?
 ====
