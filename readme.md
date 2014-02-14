@@ -19,6 +19,8 @@ Commands
 * left <steps>
 * right <steps>
 
+You can abbreviate these commands with single letters, e.g. "f 5" instead of "forward 5".  They may be uppercase or lowercase - it doesn't matter.
+
 Example
 =======
 
