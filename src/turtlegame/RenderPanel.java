@@ -64,7 +64,7 @@ public class RenderPanel extends JPanel {
 
         for( Command command : commands ) {
             g.setColor(DOTS);
-            g.fillOval(-2,-2,4,4);
+            g.fillOval(-3,-3,6,6);
 
             command.apply(ctx);
 
@@ -138,7 +138,7 @@ public class RenderPanel extends JPanel {
 //    public void setTurtle()
 
     public void executeCommand(Command command) {
-        System.out.println("Executing: "+command);
+//        System.out.println("Executing: "+command);
         commands.add(command);
         repaint();
     }

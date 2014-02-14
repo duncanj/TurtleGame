@@ -10,6 +10,7 @@ public class GameFactory {
         games.add(new None());
         games.add(new Simple());
         games.add(new OneBarrier());
+        games.add(new ThreeBarriers());
     }
 
     public List<Game> getGames() {
