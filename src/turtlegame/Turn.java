@@ -11,4 +11,11 @@ public class Turn implements Command {
     public void apply(RenderContext ctx) {
         ctx.rotate(amount);
     }
+
+    @Override
+    public String toString() {
+        return "Turn{" +
+                "amount=" + amount +
+                '}';
+    }
 }

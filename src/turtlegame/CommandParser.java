@@ -31,31 +31,37 @@ public class CommandParser {
     public void reparse() {
         List<Command> commands = new ArrayList<Command>();
         String[] lines = textArea.getText().split("\n");
+        int lineNumber = 1;
         for( String line : lines ) {
-            line = line.trim();
-            String[] parts = line.split(" ");
-            if( parts.length == 2 ) {
-                String commandName = parts[0].trim();
-                String amount = parts[1].trim();
-                int amountValue = Integer.parseInt(amount);
+            try {
+                line = line.trim();
+                String[] parts = line.split(" ");
+                if( parts.length == 2 ) {
+                    String commandName = parts[0].trim();
+                    String amount = parts[1].trim();
+                    int amountValue = Integer.parseInt(amount);
 
-                if( commandName.equalsIgnoreCase("forward") || commandName.equalsIgnoreCase("forwards") ) {
-                    Command command = new Forward(amountValue);
-                    commands.add(command);
-                } else
-                if( commandName.equalsIgnoreCase("left") ) {
-                    Command command = new Turn(amountValue);
-                    commands.add(command);
-                } else
-                if( commandName.equalsIgnoreCase("right") ) {
-                    Command command = new Turn(-amountValue);
-                    commands.add(command);
+                    if( commandName.equalsIgnoreCase("forward") || commandName.equalsIgnoreCase("forwards") ) {
+                        Command command = new Forward(amountValue);
+                        commands.add(command);
+                    } else
+                    if( commandName.equalsIgnoreCase("left") ) {
+                        Command command = new Turn(amountValue);
+                        commands.add(command);
+                    } else
+                    if( commandName.equalsIgnoreCase("right") ) {
+                        Command command = new Turn(-amountValue);
+                        commands.add(command);
+                    } else {
+                        // unrecognized command
+                    }
                 } else {
                     // unrecognized command
                 }
-            } else {
-                // unrecognized command
+            } catch( Exception e ) {
+                System.out.println("Error on line "+lineNumber+": "+e.getMessage()+" - for '"+line+"'");
             }
+            lineNumber++;
         }
         this.commandsList = commands;
         notifyChanged();

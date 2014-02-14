@@ -9,6 +9,7 @@ public class RenderContext {
     private double scaleY;
     private double scaleR;
 
+    private int width;
     private int height;
 
     private Graphics2D g;
@@ -18,12 +19,13 @@ public class RenderContext {
     public void init(Graphics2D g, int width, int height) {
         this.g = g;
 
+        this.width = width;
         this.height = height;
 
-        scaleX = width / RenderPanel.XSTEPS;
-        scaleY = height / RenderPanel.YSTEPS;
+        scaleX = (double)width / (double)RenderPanel.XSTEPS;
+        scaleY = (double)height / (double)RenderPanel.YSTEPS;
 
-        scaleR = (2.0 * Math.PI) / RenderPanel.RSTEPS;
+        scaleR = (2.0 * Math.PI) / (double)RenderPanel.RSTEPS;
     }
 
     public void translate(int stepsX, int stepsY) {
@@ -57,12 +59,28 @@ public class RenderContext {
         g.setTransform(transform);
     }
 
-    private int scaleX(int x) {
-        return (int)(((double)x) * scaleX);
+    public double scaleX(int x) {
+        return ((double)x) * scaleX;
     }
 
-    private int scaleY(int y) {
-        return (int)(((double)y) * scaleY);
+    public double scaleY(int y) {
+        return ((double)y) * scaleY;
+    }
+
+    public int inverseScaleX(int x) {
+        return (int)(((double)x) / scaleX);
+    }
+
+    public int inverseScaleY(int y) {
+        return (int)(((double)y) / scaleY);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     private double scaleR(int r) {

@@ -25,7 +25,13 @@ Example
     forward 5
     right 2
 
-The stage area is 50 steps x 50 steps, and a full circle is 16 rotation steps (so 4 rotation steps = 90 degrees).
+The stage area is 100 steps x 100 steps, and a full circle is 16 rotation steps (so 4 rotation steps = 90 degrees).
+
+
+Games
+=====
+* Simple - get the turtle into the yellow gate.
+* One Barrier - get the turtle into the yellow gate without touching the red barrier.
 
 
 Why?

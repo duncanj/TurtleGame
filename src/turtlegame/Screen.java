@@ -1,5 +1,9 @@
 package turtlegame;
 
+import turtlegame.games.Game;
+import turtlegame.games.GameFactory;
+import turtlegame.games.None;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -17,6 +21,9 @@ public class Screen implements CommandListener {
     private JLabel statusLabel;
 
     private CommandParser parser;
+    private GameFactory gameFactory;
+
+    private Game currentGame = new None();
 
     private File currentFile;
     private long sleepDelay = 1000L;
@@ -26,91 +33,7 @@ public class Screen implements CommandListener {
         screen.init();
         final JFrame frame = createFrame("Turtle Game", screen.getScreenPanel(), 640, 480);
 
-        JMenu fileMenu = new JMenu("File");
-        frame.getJMenuBar().add(fileMenu);
-
-        addMenuItem(fileMenu, "Open..", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screen.open();
-            }
-        });
-
-        addMenuItem(fileMenu, "Save", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screen.save();
-            }
-        });
-
-        addMenuItem(fileMenu, "Save as..", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screen.saveAs();
-            }
-        });
-
-        fileMenu.add(new JPopupMenu.Separator());
-
-        addMenuItem(fileMenu, "Exit", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.setVisible(false);
-                System.out.println("Thank you for playing with TurtleGame.");
-                System.exit(0);
-            }
-        });
-
-        JMenu speedMenu = new JMenu("Speed");
-        frame.getJMenuBar().add(speedMenu);
-
-        addMenuItem(speedMenu, "Slowest", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screen.setSleepDelay(5000);
-            }
-        });
-
-        addMenuItem(speedMenu, "Slow", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screen.setSleepDelay(2000);
-            }
-        });
-
-        addMenuItem(speedMenu, "Normal", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screen.setSleepDelay(1000);
-            }
-        });
-
-        addMenuItem(speedMenu, "Fast", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screen.setSleepDelay(500);
-            }
-        });
-
-        addMenuItem(speedMenu, "Fastest", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screen.setSleepDelay(200);
-            }
-        });
-
-        addMenuItem(speedMenu, "Crazy!", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                screen.setSleepDelay(20);
-            }
-        });
-
-
-        frame.getJMenuBar().add(Box.createHorizontalGlue());
-
-        JMenu helpMenu = new JMenu("Help");
-        frame.getJMenuBar().add(helpMenu);
+        screen.initMenus(frame);
 
         frame.setVisible(true);
 
@@ -146,8 +69,9 @@ public class Screen implements CommandListener {
         });
 
         parser = new CommandParser(readyTextArea);
-
         parser.addListener(this);
+
+        gameFactory = new GameFactory();
 
         statusLabel.setBorder(new EmptyBorder(0,20,0,0));
         statusLabel.setText("Ready.");
@@ -166,7 +90,10 @@ public class Screen implements CommandListener {
                     RenderPanel p = getRenderPanel();
                     p.clear();
 
+                    setEventSuppression(true);
                     parser.reparse();
+                    setEventSuppression(false);
+
                     java.util.List<Command> commands = parser.getCommands();
                     int count = 0;
                     for( Command command : commands ) {
@@ -221,7 +148,7 @@ public class Screen implements CommandListener {
     }
 
     private void createUIComponents() {
-        renderPanel = new RenderPanel();
+        renderPanel = new RenderPanel(this);
     }
 
     private boolean suppressEvents = false;
@@ -325,10 +252,121 @@ public class Screen implements CommandListener {
         sleepDelay = ms;
     }
 
-    private static JMenuItem addMenuItem(JMenu menu, String name, ActionListener listener) {
+    private void initMenus(final JFrame frame) {
+        JMenu fileMenu = new JMenu("File");
+        frame.getJMenuBar().add(fileMenu);
+
+        addMenuItem(fileMenu, "Open..", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                open();
+            }
+        });
+
+        addMenuItem(fileMenu, "Save", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                save();
+            }
+        });
+
+        addMenuItem(fileMenu, "Save as..", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveAs();
+            }
+        });
+
+        fileMenu.add(new JPopupMenu.Separator());
+
+        addMenuItem(fileMenu, "Exit", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                System.out.println("Thank you for playing with TurtleGame.");
+                System.exit(0);
+            }
+        });
+
+        JMenu gameMenu = new JMenu("Game");
+        frame.getJMenuBar().add(gameMenu);
+
+        for( final Game game : gameFactory.getGames() ) {
+            addMenuItem(gameMenu, game.getName(), new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    switchToGame(game);
+                }
+            });
+        }
+
+        JMenu speedMenu = new JMenu("Speed");
+        frame.getJMenuBar().add(speedMenu);
+
+        addMenuItem(speedMenu, "Slowest", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setSleepDelay(5000);
+            }
+        });
+
+        addMenuItem(speedMenu, "Slow", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setSleepDelay(2000);
+            }
+        });
+
+        addMenuItem(speedMenu, "Normal", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setSleepDelay(1000);
+            }
+        });
+
+        addMenuItem(speedMenu, "Fast", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setSleepDelay(500);
+            }
+        });
+
+        addMenuItem(speedMenu, "Fastest", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setSleepDelay(200);
+            }
+        });
+
+        addMenuItem(speedMenu, "Crazy!", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setSleepDelay(20);
+            }
+        });
+
+
+        frame.getJMenuBar().add(Box.createHorizontalGlue());
+
+        JMenu helpMenu = new JMenu("Help");
+        frame.getJMenuBar().add(helpMenu);
+
+    }
+
+    private JMenuItem addMenuItem(JMenu menu, String name, ActionListener listener) {
         JMenuItem item = new JMenuItem(name);
         menu.add(item);
         item.addActionListener(listener);
         return item;
+    }
+
+    private void switchToGame(Game game) {
+        currentGame = game;
+        getRenderPanel().clear();
+        statusLabel.setText("Changed game to '"+currentGame.getName()+"'.");
+    }
+
+    public Game getCurrentGame() {
+        return currentGame;
     }
 }

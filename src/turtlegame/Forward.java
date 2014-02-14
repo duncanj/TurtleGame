@@ -11,4 +11,11 @@ public class Forward implements Command {
     public void apply(RenderContext ctx) {
         ctx.translate(0,steps);
     }
+
+    @Override
+    public String toString() {
+        return "Forward{" +
+                "steps=" + steps +
+                '}';
+    }
 }
