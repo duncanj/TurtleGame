@@ -2,22 +2,21 @@ package turtlegame;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 public class RenderContext {
-    public double scaleX;
-    public double scaleY;
-    public double scaleR;
+    private double scaleX;
+    private double scaleY;
+    private double scaleR;
 
-    public int height;
+    private int height;
 
-    public Graphics2D g;
+    private Graphics2D g;
 
-    private AffineTransform originalTransform;
+    private ArrayList<AffineTransform> stack = new ArrayList();
 
     public void init(Graphics2D g, int width, int height) {
         this.g = g;
-
-        originalTransform = g.getTransform();
 
         this.height = height;
 
@@ -35,6 +34,29 @@ public class RenderContext {
         g.rotate(scaleR(steps));
     }
 
+    /**
+     * Get the current origin position in component co-ordinates.
+     * @return
+     */
+    public Point getComponentCoordinates() {
+        int tx = (int)(g.getTransform().getTranslateX());
+        int ty = (int)(g.getTransform().getTranslateY());
+        return new Point(tx, ty);
+    }
+
+    public void pushTransform(AffineTransform transform) {
+        stack.add(g.getTransform());
+        g.setTransform(transform);
+    }
+
+    public void popTransform() {
+        if( stack.isEmpty() ) {
+            return;
+        }
+        AffineTransform transform = stack.remove(stack.size()-1);
+        g.setTransform(transform);
+    }
+
     private int scaleX(int x) {
         return (int)(((double)x) * scaleX);
     }
@@ -45,9 +67,5 @@ public class RenderContext {
 
     private double scaleR(int r) {
         return ((double)r) * scaleR;
-    }
-
-    public void reset() {
-        g.setTransform(originalTransform);
     }
 }

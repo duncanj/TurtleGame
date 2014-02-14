@@ -2,6 +2,7 @@ package turtlegame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.*;
 
 public class RenderPanel extends JPanel {
@@ -15,6 +16,8 @@ public class RenderPanel extends JPanel {
 
     private java.util.List<Point> points = new ArrayList<Point>();
 
+    private Color DOTS = new Color(0,45,0);
+    private Color TRAIL = DOTS;
 
     public RenderPanel() {
         setDoubleBuffered(true);
@@ -24,6 +27,7 @@ public class RenderPanel extends JPanel {
     protected void paintComponent(Graphics g1) {
         super.paintComponent(g1);
         Graphics2D g = (Graphics2D) g1;
+        AffineTransform initialTransform = g.getTransform();
 
         g.scale(1,-1);
         g.translate(0,-getHeight()+30);
@@ -34,21 +38,29 @@ public class RenderPanel extends JPanel {
 
         ctx.translate(25,0);
 
-//        AffineTransform previousTransform = g.getTransform();
-        g.setColor(Color.GRAY);
+        Point lastPoint = ctx.getComponentCoordinates();
+
         for( Command command : commands ) {
-            g.fillOval(-2,-2,5,5);
+            g.setColor(DOTS);
+            g.fillOval(-2,-2,4,4);
+
             command.apply(ctx);
 
-//            Point previousPoint = new Point();
-//            previousTransform.transform( new Point( 0, 0 ), previousPoint );
-//
+            Point thisPoint = ctx.getComponentCoordinates();
+
+            g.setColor(TRAIL);
+            ctx.pushTransform(initialTransform);
+            g.drawLine(lastPoint.x, lastPoint.y, thisPoint.x, thisPoint.y);
+            ctx.popTransform();
+
 //            g.drawLine(0,0,previousPoint.x,previousPoint.y);
 //
-//            previousTransform = g.getTransform();
+            lastPoint = thisPoint;
         }
 
         drawTurtle(g);
+
+        g.setTransform(initialTransform);
     }
 
     private void debugGrid(Graphics2D g) {
