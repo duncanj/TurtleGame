@@ -345,6 +345,27 @@ public class Screen implements CommandListener {
             }
         });
 
+        JMenu turtleMenu = new JMenu("Turtle");
+        frame.getJMenuBar().add(turtleMenu);
+        addMenuItem(turtleMenu, "Dart", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getRenderPanel().setTurtle(RenderPanel.Turtle.DART);
+            }
+        });
+        addMenuItem(turtleMenu, "Turtle", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getRenderPanel().setTurtle(RenderPanel.Turtle.TURTLE);
+            }
+        });
+        addMenuItem(turtleMenu, "Spaceship", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getRenderPanel().setTurtle(RenderPanel.Turtle.SPACESHIP);
+            }
+        });
+
         JMenu trailMenu = new JMenu("Trail");
         frame.getJMenuBar().add(trailMenu);
         addMenuItem(trailMenu, "Dots + Lines", new ActionListener() {
