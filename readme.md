@@ -27,7 +27,7 @@ Example
     forward 5
     right 2
 
-The stage area is 100 steps x 100 steps, and a full circle is 16 rotation steps (so 4 rotation steps = 90 degrees).
+The stage area is approx 100 steps x 100 steps, and a full circle is 16 rotation steps (so 4 rotation steps = 90 degrees).
 
 
 Games

@@ -29,10 +29,16 @@ public class RenderPanel extends JPanel {
     private boolean linesActive = true;
     private boolean largeDots = false;
 
+    private Turtle turtle = Turtle.DART;
+
     private Stroke defaultStroke = new BasicStroke(1.0f);
     private Stroke wideStroke = new BasicStroke(10.0f);
 
     private Font bigFont = new Font("Monospaced", Font.BOLD, 24);
+
+    private ImageIcon turtleIcon = new ImageIcon("src/turtle.png");
+    private ImageIcon spaceshipIcon = new ImageIcon("src/spaceship.png");
+
 
     public RenderPanel(Screen screen) {
         this.screen = screen;
@@ -148,8 +154,6 @@ public class RenderPanel extends JPanel {
         }
     }
 
-//    public void setTurtle()
-
     public void executeCommand(Command command) {
 //        System.out.println("Executing: "+command);
         commands.add(command);
@@ -168,9 +172,29 @@ public class RenderPanel extends JPanel {
         repaint();
     }
 
+    public void setTurtle(Turtle turtle) {
+        this.turtle = turtle;
+        repaint();
+    }
+
     private void drawTurtle(Graphics2D g) {
-        g.setColor(Color.YELLOW);
-        Polygon p = new Polygon(new int[]{-16,0,16,0}, new int[]{-10,-5,-10,30}, 4);
-        g.fillPolygon(p);
+        if( turtle == Turtle.DART ) {
+            g.setColor(Color.YELLOW);
+            Polygon p = new Polygon(new int[]{-16,0,16,0}, new int[]{-10,-5,-10,30}, 4);
+            g.fillPolygon(p);
+        } else
+        if( turtle == Turtle.TURTLE ) {
+            g.drawImage(turtleIcon.getImage(), -25, -25, this);
+        } else
+        if( turtle == Turtle.SPACESHIP ) {
+            g.drawImage(spaceshipIcon.getImage(), -32, -32, this);
+        }
+
+    }
+
+    public enum Turtle {
+        DART,
+        TURTLE,
+        SPACESHIP
     }
 }
