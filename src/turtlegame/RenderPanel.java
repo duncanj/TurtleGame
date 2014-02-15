@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.AffineTransform;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 public class RenderPanel extends JPanel {
@@ -36,8 +38,8 @@ public class RenderPanel extends JPanel {
 
     private Font bigFont = new Font("Monospaced", Font.BOLD, 24);
 
-    private ImageIcon turtleIcon = new ImageIcon("src/turtle.png");
-    private ImageIcon spaceshipIcon = new ImageIcon("src/spaceship.png");
+    private ImageIcon turtleIcon;
+    private ImageIcon spaceshipIcon;
 
 
     public RenderPanel(Screen screen) {
@@ -50,6 +52,24 @@ public class RenderPanel extends JPanel {
                 repaint();
             }
         });
+
+        try {
+            // dev environment
+            turtleIcon = new ImageIcon(RenderPanel.class.getResource("../turtle.png"));
+            spaceshipIcon = new ImageIcon(RenderPanel.class.getResource("../spaceship.png"));
+        } catch( Throwable e ) {
+            try {
+                // from JAR file
+                turtleIcon = new ImageIcon(RenderPanel.class.getResource("turtle.png"));
+                spaceshipIcon = new ImageIcon(RenderPanel.class.getResource("spaceship.png"));
+            } catch( Throwable e2 ) {
+                System.out.println("Error loading icons: "+e.getMessage()+" + "+e2.getMessage());
+            }
+        }
+
+        if( turtleIcon == null || spaceshipIcon == null ) {
+            throw new RuntimeException("Unable to load icons. :-(");
+        }
     }
 
     @Override
