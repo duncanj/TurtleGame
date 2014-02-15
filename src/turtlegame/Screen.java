@@ -28,6 +28,8 @@ public class Screen implements CommandListener {
     private File currentFile;
     private long sleepDelay = 1000L;
 
+    private boolean running = false;
+
     public static void main(String[] args) {
         final Screen screen = new Screen();
         screen.init();
@@ -80,43 +82,48 @@ public class Screen implements CommandListener {
     private boolean stopRequested = false;
 
     public void go() {
+        if( running ) return;
+
         new Thread() {
             public void run() {
-                statusLabel.setText("Running..");
-
-                getRenderPanel().clear();
-
+                running = true;
                 try {
-                    RenderPanel p = getRenderPanel();
-                    p.clear();
+                    statusLabel.setText("Running..");
 
-                    setEventSuppression(true);
-                    parser.reparse();
-                    setEventSuppression(false);
+                    getRenderPanel().clear();
 
-                    java.util.List<Command> commands = parser.getCommands();
-                    int count = 0;
-                    for( Command command : commands ) {
-                        statusLabel.setText("Running.. ("+count+"/"+commands.size()+")");
-                        sleep(sleepDelay);
-                        if( stopRequested ) {
-                            stopRequested = false;
-                            statusLabel.setText("Ready.");
-                            return;
+                    try {
+                        RenderPanel p = getRenderPanel();
+                        p.clear();
+
+                        setEventSuppression(true);
+                        parser.reparse();
+                        setEventSuppression(false);
+
+                        java.util.List<Command> commands = parser.getCommands();
+                        int count = 0;
+                        for( Command command : commands ) {
+                            statusLabel.setText("Running.. ("+count+"/"+commands.size()+")");
+                            sleep(sleepDelay);
+                            if( stopRequested ) {
+                                stopRequested = false;
+                                statusLabel.setText("Ready.");
+                                return;
+                            }
+                            p.executeCommand(command);
+                            count++;
                         }
-                        p.executeCommand(command);
-                        count++;
+                        statusLabel.setText("Running.. ("+count+"/"+commands.size()+")");
+                        sleep(1000);
+                    } catch (InterruptedException e) {
                     }
-                    statusLabel.setText("Running.. ("+count+"/"+commands.size()+")");
-                    sleep(1000);
-                } catch (InterruptedException e) {
+                    stopRequested = false;
+                    statusLabel.setText("Ready.");
+                } finally {
+                    running = false;
                 }
-                stopRequested = false;
-                statusLabel.setText("Ready.");
             }
         }.start();
-
-
     }
 
     public void stop() {
