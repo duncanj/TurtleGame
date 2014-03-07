@@ -11,6 +11,8 @@ public class GameFactory {
         games.add(new Simple());
         games.add(new OneBarrier());
         games.add(new ThreeBarriers());
+        games.add(new Maze());
+        games.add(new Impossible());
     }
 
     public List<Game> getGames() {

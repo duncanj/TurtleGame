@@ -2,14 +2,12 @@ package turtlegame;
 
 import turtlegame.games.Game;
 import turtlegame.games.GameContext;
+import turtlegame.games.Maze;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 public class RenderPanel extends JPanel {
@@ -42,7 +40,7 @@ public class RenderPanel extends JPanel {
     private ImageIcon spaceshipIcon;
 
 
-    public RenderPanel(Screen screen) {
+    public RenderPanel(final Screen screen) {
         this.screen = screen;
         setDoubleBuffered(true);
 
@@ -70,7 +68,54 @@ public class RenderPanel extends JPanel {
         if( turtleIcon == null || spaceshipIcon == null ) {
             throw new RuntimeException("Unable to load icons. :-(");
         }
+
+        // development only!
+        /*
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if( e.getButton() == MouseEvent.BUTTON3 ) {
+                    lastPoint = null;
+                    return;
+                }
+                Point stepCoords = gameCtx.convertToStepCoordinates(e.getPoint());
+                int h = 8;
+                int v = 5;
+                int sh = 3;
+                int sv = 3;
+                stepCoords.x = (stepCoords.x - h) / sh;
+                stepCoords.y = (stepCoords.y - v) / sv;
+//                System.out.println("Clicked at "+stepCoords.x+","+stepCoords.y);
+
+                Maze maze = screen.getCurrentGame() instanceof Maze ? (Maze) screen.getCurrentGame() : null;
+
+                if( lastPoint != null ) {
+                    int x = lastPoint.x;
+                    int y = lastPoint.y;
+                    int height = (stepCoords.y-lastPoint.y);
+                    int width = (stepCoords.x-lastPoint.x);
+                    if( lastPoint.x == stepCoords.x ) {
+                        // vertical
+                        System.out.println("addV("+x+","+y+","+height+");");
+                        if( maze != null ) maze.addV(x,y,height);
+                        repaint();
+                    } else
+                    if( lastPoint.y == stepCoords.y ) {
+                        // horizontal
+                        System.out.println("addH("+x+","+y+","+width+");");
+                        if( maze != null ) maze.addH(x,y,width);
+                        repaint();
+                    } else {
+//                        System.out.println("rect("+x+","+y+","+width+","+height+");");
+                    }
+
+                }
+                lastPoint = stepCoords;
+            }
+        });
+        */
     }
+    private Point lastPoint = null;
 
     @Override
     protected void paintComponent(Graphics g1) {
@@ -217,4 +262,5 @@ public class RenderPanel extends JPanel {
         TURTLE,
         SPACESHIP
     }
+
 }
