@@ -38,6 +38,8 @@ Games
 * Simple - get the turtle into the yellow gate.
 * One Barrier - get the turtle into the yellow gate without touching the red barrier.
 * Three Barriers - weave the turtle in and out of the barriers to get to the gate.
+* Maze - a challenging maze to navigate.
+* Impossible - this will take some thinking..
 
 Why?
 ====
